@@ -13,6 +13,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,12 +49,17 @@ public class TimelineActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_compose:
-	      Toast.makeText(this, "Menu Item 1 selected", Toast.LENGTH_SHORT)
-	          .show();
+	      startComposeAction();
 	      break;
 	    default:
 	    	break;
 	    }
 	    return true;
-	  } 
+	  }
+	
+	private void startComposeAction() {
+		Intent i = new Intent(getBaseContext(), ComposeActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+		startActivity(i);
+	}
 }
