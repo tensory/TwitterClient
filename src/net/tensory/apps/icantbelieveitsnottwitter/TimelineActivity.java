@@ -15,7 +15,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
 
@@ -42,4 +44,16 @@ public class TimelineActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_compose:
+	      Toast.makeText(this, "Menu Item 1 selected", Toast.LENGTH_SHORT)
+	          .show();
+	      break;
+	    default:
+	    	break;
+	    }
+	    return true;
+	  } 
 }

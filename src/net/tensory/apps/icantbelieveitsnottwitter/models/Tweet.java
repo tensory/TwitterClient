@@ -20,6 +20,10 @@ public class Tweet extends BaseModel {
     public long getId() {
         return getLong("id");
     }
+    
+    public String getTimestamp() {
+    	return getString("created_at");
+    }
 
     public boolean isFavorited() {
         return getBoolean("favorited");

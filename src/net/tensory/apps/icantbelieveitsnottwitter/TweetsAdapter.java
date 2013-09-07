@@ -1,12 +1,18 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 import android.content.Context;
 import android.text.Html;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +43,27 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 	        String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +
 	                tweet.getUser().getScreenName() + "</font></small>";
 	        nameView.setText(Html.fromHtml(formattedName));
+	        
+	        TextView timestampView = (TextView) view.findViewById(R.id.tvTimestamp);
+	        timestampView.setText(getFriendlyTimestamp(tweet.getTimestamp()));
 
 	        TextView bodyView = (TextView) view.findViewById(R.id.tvBody);
 	        bodyView.setText(Html.fromHtml(tweet.getBody()));
 	        
 	        return view;
+	}
+	
+	protected String getFriendlyTimestamp(String original) {
+		Date date;
+		String formatted = original;
+    	// Assumes format from Twitter goes like: Thu Oct 21 16:02:46 +0000 2010
+    	try {
+			date = new SimpleDateFormat("EEE MMM d H:m:s ZZZ yyyy", Locale.ENGLISH).parse(original);
+	    	formatted = (String) DateUtils.getRelativeTimeSpanString(date.getTime(), System.currentTimeMillis(), 0L);
+    	} catch (ParseException e) {
+    		Log.e("DATE ERROR", e.getStackTrace().toString());
+		}
+    	return formatted;
 	}
 
 }
