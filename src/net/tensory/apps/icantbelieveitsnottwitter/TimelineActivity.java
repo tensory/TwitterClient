@@ -71,7 +71,6 @@ public class TimelineActivity extends Activity {
 				if (tweet.getString("text").contains("Dymaxion") == false) {
 					sanitized.put((JSONObject) tweet);
 				}
-				Log.d("Tweet", tweet.toString());
 			} catch (JSONException e) {
 				Log.e("BAD_TWEET", e.getStackTrace().toString());
 			}
