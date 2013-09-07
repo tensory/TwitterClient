@@ -47,6 +47,9 @@
             android:name="net.tensory.apps.icantbelieveitsnottwitter.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
+        <activity
+            android:name="net.tensory.apps.icantbelieveitsnottwitter.ComposeActivity">
+        </activity>
     </application>
 
 </manifest>
