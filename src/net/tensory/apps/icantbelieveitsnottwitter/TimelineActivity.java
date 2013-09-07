@@ -3,6 +3,8 @@ package net.tensory.apps.icantbelieveitsnottwitter;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -30,6 +32,8 @@ public class TimelineActivity extends Activity {
 		TwitterClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
+				jsonTweets = sanitizeStream(jsonTweets);
+				
 				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
 				TweetsAdapter adapter = new TweetsAdapter(getBaseContext(), tweets);
 				ListView lv = (ListView) findViewById(R.id.lvTweets);
@@ -56,6 +60,24 @@ public class TimelineActivity extends Activity {
 	    }
 	    return true;
 	  }
+	
+	private JSONArray sanitizeStream(JSONArray tweets) {
+		/* Tweet censoring, because I don't want to see certain retweets during development */
+		JSONArray sanitized = new JSONArray();
+		for (int i = 0; i < tweets.length(); i++) {
+			JSONObject tweet;
+			try {
+				tweet = tweets.getJSONObject(i);
+				if (tweet.getString("text").contains("Dymaxion") == false) {
+					sanitized.put((JSONObject) tweet);
+				}
+				Log.d("Tweet", tweet.toString());
+			} catch (JSONException e) {
+				Log.e("BAD_TWEET", e.getStackTrace().toString());
+			}
+		}
+		return sanitized;
+	}
 	
 	private void startComposeAction() {
 		Intent i = new Intent(getBaseContext(), ComposeActivity.class);
