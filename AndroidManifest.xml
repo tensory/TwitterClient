@@ -48,7 +48,9 @@
             android:label="@string/title_activity_timeline" >
         </activity>
         <activity
-            android:name="net.tensory.apps.icantbelieveitsnottwitter.ComposeActivity">
+            android:name="net.tensory.apps.icantbelieveitsnottwitter.ComposeActivity"
+            android:label=""
+            android:parentActivityName="net.tensory.apps.icantbelieveitsnottwitter.TimelineActivity">
         </activity>
     </application>
 

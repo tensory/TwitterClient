@@ -3,10 +3,11 @@
           android:title="@string/menu_foo"
           android:showAsAction="always"
           android:actionLayout="@layout/action_button_foo" />
+	 
 	 <item android:id="@+id/btnSendTweet"
-          android:title="@string/menu_foo"
+          android:title="@string/action_post"
           android:showAsAction="always"
-          android:actionLayout="@layout/action_button_foo" />
+          android:actionLayout="@layout/post_tweet_button" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

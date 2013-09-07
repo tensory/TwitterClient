@@ -10,5 +10,6 @@
     <string name="action_compose">Compose</string>
     <string name="title_activity_compose">ComposeActivity</string>
     <string name="menu_foo">Foo</string>
-
+    <string name="action_post">Tweet</string>
+    
 </resources>
