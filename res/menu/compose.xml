@@ -1,17 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-	 <item android:id="@+id/menu_foo"
-          android:title="@string/menu_foo"
-          android:showAsAction="always"
-          android:actionLayout="@layout/action_button_foo" />
-	 
-	 <item android:id="@+id/btnSendTweet"
-          android:title="@string/action_post"
-          android:showAsAction="always"
-          android:actionLayout="@layout/post_tweet_button" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-
 </menu>
