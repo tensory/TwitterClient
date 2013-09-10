@@ -38,10 +38,12 @@ public class ComposeActivity extends Activity {
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 	    etCompose = (EditText) findViewById(R.id.etCompose);
 	    
+	    /*
 	    LayoutInflater infl = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View cView = infl.inflate(R.layout.post_button, null);
         actionBar.setCustomView(cView);
         actionBar.setDisplayShowCustomEnabled(true);
+        */
 	}
 
 	@Override
@@ -59,25 +61,28 @@ public class ComposeActivity extends Activity {
 		overridePendingTransition(0, 0);
 	}
 	
-	public void onClick(View v) {
+	public void onSubmitTweet(MenuItem mi) {
 		Toast.makeText(getBaseContext(), "POSTING", Toast.LENGTH_LONG).show();
-		
-	}
-	
-	// Send the tweet after validating it.
-	public void onClickPost() {
 		String raw = etCompose.getText().toString();
-		Log.d("POSTING", raw);
-		Toast.makeText(getBaseContext(), "POSTING", Toast.LENGTH_LONG).show();
-		/*
 		TwitterClientApp.getRestClient().postTweet(raw, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {
-				Log.d("DEBUG", "Success!");
+				// finish this intent
+				// use a intent with a result id in the timeline activity to fire a result
+				
+				Toast.makeText(getBaseContext(), "Posting worked", Toast.LENGTH_LONG).show();
+			}
+			
+			@Override
+			public void onFailure(Throwable exception, JSONObject response) {
+				// TODO Auto-generated method stub
+				Log.d("ERROR", response.toString());
+				Log.d("ERROR", exception.getMessage());
+				Toast.makeText(getBaseContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		});
-		*/
 	}
+	
 	
 	private String validateInput(String input) {
 		return input;
