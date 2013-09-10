@@ -15,6 +15,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -23,23 +24,26 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
-
+	public static final int COMPOSE_ACTIVITY_ID = 2;
+	protected JsonHttpResponseHandler tweetRequestHandler; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		
-		TwitterClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler() {
+		tweetRequestHandler = new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				jsonTweets = sanitizeStream(jsonTweets);
 				
 				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-				TweetsAdapter adapter = new TweetsAdapter(getBaseContext(), tweets);
+				TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 				ListView lv = (ListView) findViewById(R.id.lvTweets);
-				lv.setAdapter(adapter);
+				lv.setAdapter(tweetsAdapter);
 			}
-		});
+		};
+		
+		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
 	}
 
 	@Override
@@ -81,6 +85,15 @@ public class TimelineActivity extends Activity {
 	private void startComposeAction() {
 		Intent i = new Intent(getBaseContext(), ComposeActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		startActivity(i);
+		startActivityForResult(i, COMPOSE_ACTIVITY_ID);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode,
+	          Intent data) {
+	      if (requestCode == COMPOSE_ACTIVITY_ID) {
+	          if (resultCode == RESULT_OK) {
+	      		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
+	          }
+	      }
 	}
 }

@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,13 +38,6 @@ public class ComposeActivity extends Activity {
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 	    etCompose = (EditText) findViewById(R.id.etCompose);
-	    
-	    /*
-	    LayoutInflater infl = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View cView = infl.inflate(R.layout.post_button, null);
-        actionBar.setCustomView(cView);
-        actionBar.setDisplayShowCustomEnabled(true);
-        */
 	}
 
 	@Override
@@ -67,6 +61,8 @@ public class ComposeActivity extends Activity {
 		TwitterClientApp.getRestClient().postTweet(raw, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {
+				setResult(Activity.RESULT_OK, new Intent(getBaseContext(), TimelineActivity.class));
+				finish();
 				// finish this intent
 				// use a intent with a result id in the timeline activity to fire a result
 				

@@ -9,6 +9,7 @@ import java.util.Locale;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
+import net.tensory.apps.icantbelieveitsnottwitter.TimelineActivity;
 import android.content.Context;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -56,10 +57,15 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 	protected String getFriendlyTimestamp(String original) {
 		Date date;
 		String formatted = original;
+		
     	// Assumes format from Twitter goes like: Thu Oct 21 16:02:46 +0000 2010
     	try {
 			date = new SimpleDateFormat("EEE MMM d H:m:s ZZZ yyyy", Locale.ENGLISH).parse(original);
-	    	formatted = (String) DateUtils.getRelativeTimeSpanString(date.getTime(), System.currentTimeMillis(), 0L);
+			long newTime = date.getTime();
+			if (newTime >= System.currentTimeMillis()) {
+				newTime = System.currentTimeMillis();
+			}
+	    	formatted = (String) DateUtils.getRelativeTimeSpanString(newTime, System.currentTimeMillis(), 0L);
     	} catch (ParseException e) {
     		Log.e("DATE ERROR", e.getStackTrace().toString());
 		}
