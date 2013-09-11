@@ -1,6 +1,7 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import net.tensory.apps.icantbelieveitsnottwitter.R;
 import net.tensory.apps.icantbelieveitsnottwitter.R.layout;
 import net.tensory.apps.icantbelieveitsnottwitter.R.menu;
+import net.tensory.apps.icantbelieveitsnottwitter.models.StoredTweet;
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 
 import android.os.Bundle;
@@ -35,6 +37,7 @@ public class TimelineActivity extends Activity {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				jsonTweets = sanitizeStream(jsonTweets);
+				saveTweets(jsonTweets);
 				
 				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
 				TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
@@ -43,7 +46,20 @@ public class TimelineActivity extends Activity {
 			}
 		};
 		
-		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
+		try {
+			ArrayList<StoredTweet> storedTweets = StoredTweet.getAll();
+			if (storedTweets.isEmpty()) {
+				// Toast.makeText(getBaseContext(), "Not enough tweets", Toast.LENGTH_LONG).show();
+				throw new Exception("Not enough tweets!");
+			}
+			Toast.makeText(getBaseContext(), "Using stored tweets", 60).show();
+			StoredTweetsAdapter tweetsAdapter = new StoredTweetsAdapter(getBaseContext(), storedTweets);
+			ListView lv = (ListView) findViewById(R.id.lvTweets);
+			lv.setAdapter(tweetsAdapter);
+		} catch (Exception e) {
+			Log.d("ERROR", "no tweets stored");
+			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
+		}
 	}
 
 	@Override
@@ -95,5 +111,17 @@ public class TimelineActivity extends Activity {
 	      		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
 	          }
 	      }
+	}
+	
+	protected void saveTweets(JSONArray tweets) {
+		try {
+			for (int i = 0; i < tweets.length(); i++) {
+				StoredTweet st = new StoredTweet((JSONObject) tweets.get(i));
+				st.save();
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

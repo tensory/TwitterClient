@@ -65,4 +65,9 @@ public class Tweet extends BaseModel {
 
         return tweets;
     }
+    
+    public void save(JSONObject jsonObject) {
+    	
+    	
+    }
 }

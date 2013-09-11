@@ -78,45 +78,6 @@ public class ComposeActivity extends Activity {
 			}
 		});
 	}
-	
-	
-	private String validateInput(String input) {
-		return input;
-	}
-
-
-	protected class ValidatedTweet {
-		public String content;
-		static final int MAX_TWEET_LENGTH = 140;
-		
-		ValidatedTweet(String string) {
-			content = string;
-		}
-		
-		public void validate() {
-			if (!this.hasValidLength()) {
-				if (content.length() > MAX_TWEET_LENGTH) {
-					content = content.substring(0, MAX_TWEET_LENGTH);
-				}
-				if (content.length() == 0) {
-
-				}
-			}
-		}
-		
-		private boolean hasValidLength() {
-			boolean valid = true;
-			if (content.length() == 0) {
-				valid = false;
-			}
-			
-			if (content.length() > MAX_TWEET_LENGTH) {
-				valid = false;
-			}
-			return valid;
-		}
-		
-	}
 }
 
 

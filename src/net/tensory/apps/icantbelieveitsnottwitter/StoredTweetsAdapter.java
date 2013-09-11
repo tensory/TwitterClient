@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Locale;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-
+import net.tensory.apps.icantbelieveitsnottwitter.TweetsAdapter;
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
+import net.tensory.apps.icantbelieveitsnottwitter.models.StoredTweet;
 import net.tensory.apps.icantbelieveitsnottwitter.TimelineActivity;
 import android.content.Context;
 import android.text.Html;
@@ -21,9 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TweetsAdapter extends ArrayAdapter<Tweet> {
+public class StoredTweetsAdapter extends ArrayAdapter<StoredTweet> {
 
-	public TweetsAdapter(Context context, List<Tweet> tweets) {
+	public StoredTweetsAdapter(Context context, List<StoredTweet> tweets) {
 		super(context, 0, tweets);
 	}
 	
@@ -35,41 +36,23 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 		    	view = inflater.inflate(R.layout.tweet_item, null);
 		    }
 
-	        Tweet tweet = getItem(position);
+	        StoredTweet tweet = getItem(position);
 	        
 	        ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
-	        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
+	        ImageLoader.getInstance().displayImage(tweet.profile_image_url_https, imageView);
 	        
 	        TextView nameView = (TextView) view.findViewById(R.id.tvName);
-	        String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +
-	                tweet.getUser().getScreenName() + "</font></small>";
+	        String formattedName = "<b>" + tweet.name + "</b>" + " <small><font color='#777777'>@" +
+	                tweet.screen_name + "</font></small>";
 	        nameView.setText(Html.fromHtml(formattedName));
 	        
 	        TextView timestampView = (TextView) view.findViewById(R.id.tvTimestamp);
-	        timestampView.setText(getFriendlyTimestamp(tweet.getTimestamp()));
+	        timestampView.setText(TweetsAdapter.getFriendlyTimestamp(tweet.created_at));
 
 	        TextView bodyView = (TextView) view.findViewById(R.id.tvBody);
-	        bodyView.setText(Html.fromHtml(tweet.getBody()));
+	        bodyView.setText(Html.fromHtml(tweet.text));
 	        
 	        return view;
-	}
-	
-	protected static String getFriendlyTimestamp(String original) {
-		Date date;
-		String formatted = original;
-		
-    	// Assumes format from Twitter goes like: Thu Oct 21 16:02:46 +0000 2010
-    	try {
-			date = new SimpleDateFormat("EEE MMM d H:m:s ZZZ yyyy", Locale.ENGLISH).parse(original);
-			long newTime = date.getTime();
-			if (newTime >= System.currentTimeMillis()) {
-				newTime = System.currentTimeMillis();
-			}
-	    	formatted = (String) DateUtils.getRelativeTimeSpanString(newTime, System.currentTimeMillis(), 0L);
-    	} catch (ParseException e) {
-    		Log.e("DATE ERROR", e.getStackTrace().toString());
-		}
-    	return formatted;
 	}
 
 }
