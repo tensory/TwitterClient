@@ -8,12 +8,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LoginActivity" >
 
+    <ImageView
+        android:layout_alignParentTop="true"
+        android:id="@+id/ivSplash"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_logo" />
+    
     <Button
+        android:layout_below="@id/ivSplash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:onClick="loginToRest"
         android:text="@string/login_label" />
+
+    
 
 </RelativeLayout>
