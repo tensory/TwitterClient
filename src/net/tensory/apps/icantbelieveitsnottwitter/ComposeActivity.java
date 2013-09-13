@@ -56,17 +56,12 @@ public class ComposeActivity extends Activity {
 	}
 	
 	public void onSubmitTweet(MenuItem mi) {
-		Toast.makeText(getBaseContext(), "POSTING", Toast.LENGTH_LONG).show();
 		String raw = etCompose.getText().toString();
 		TwitterClientApp.getRestClient().postTweet(raw, new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject response) {
 				setResult(Activity.RESULT_OK, new Intent(getBaseContext(), TimelineActivity.class));
 				finish();
-				// finish this intent
-				// use a intent with a result id in the timeline activity to fire a result
-				
-				Toast.makeText(getBaseContext(), "Posting worked", Toast.LENGTH_LONG).show();
 			}
 			
 			@Override
