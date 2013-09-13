@@ -45,6 +45,20 @@ public class TimelineActivity extends Activity {
 				lv.setAdapter(tweetsAdapter);
 			}
 		};
+		/*
+		ArrayList<Tweet> tweets = Tweet.getAll();
+		try {
+			if (tweets.isEmpty()) {
+				throw new Exception("Not enough tweets");
+			}
+			TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
+			ListView lv = (ListView) findViewById(R.id.lvTweets);
+			lv.setAdapter(tweetsAdapter);
+		} catch (Exception e) {
+			
+			
+		}
+		/*
 		
 		try {
 			ArrayList<StoredTweet> storedTweets = StoredTweet.getAll();
@@ -59,7 +73,7 @@ public class TimelineActivity extends Activity {
 		} catch (Exception e) {
 			Log.d("ERROR", "no tweets stored");
 			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
-		}
+		}*/
 	}
 
 	@Override
@@ -88,7 +102,7 @@ public class TimelineActivity extends Activity {
 			JSONObject tweet;
 			try {
 				tweet = tweets.getJSONObject(i);
-				if (tweet.getString("text").contains("Dymaxion") == false) {
+				if (tweet.getString("text").contains("Dymaxion") == false && tweet.getString("text").contains("Shanley") == false) {
 					sanitized.put((JSONObject) tweet);
 				}
 			} catch (JSONException e) {
