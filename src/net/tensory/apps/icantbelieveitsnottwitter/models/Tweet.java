@@ -28,11 +28,7 @@ public class Tweet extends Model {
     public String getBody() {
         return this.text;
     }
-/*
-    public long getId() {
-        return getLong("id");
-    }
-*/    
+    
     public String getTimestamp() {
     	return this.createdAt;
     }
