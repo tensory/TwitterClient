@@ -1,19 +1,30 @@
 package net.tensory.apps.icantbelieveitsnottwitter.models;
 
 import org.json.JSONObject;
+import com.activeandroid.*;
+import com.activeandroid.annotation.*;
 
-public class User extends BaseModel {
+@Table(name = "User")
+public class User extends Model {
+	@Column(name = "name")
+	private String name;
+	@Column(name = "screen_name")
+	private String screenName;
+	
     public String getName() {
-        return getString("name");
+        return this.name;
     }
-
-    public long getId() {
-        return getLong("id");
-    }
-
+    
     public String getScreenName() {
-        return getString("screen_name");
+        return this.screenName;
     }
+    
+/*
+    public long getId() {
+        return 1;
+    }
+
+    
 
     public String getProfileImageUrl() {
         return getString("profile_image_url");
@@ -34,18 +45,17 @@ public class User extends BaseModel {
     public int getFriendsCount() {
         return getInt("friends_count");
     }
-
+*/
     public static User fromJson(JSONObject json) {
         User u = new User();
-
+        
         try {
-            u.jsonObject = json;
+        	u.name = json.getString("name");
+        	u.screenName = json.getString("screen_name");
+        	u.save();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return u;
     }
-
-
 }

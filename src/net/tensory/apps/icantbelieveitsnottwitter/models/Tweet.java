@@ -4,40 +4,45 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
+import com.activeandroid.*;
+import com.activeandroid.query.*;
+import com.activeandroid.annotation.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Tweet extends BaseModel {
-    private User user;
-
+@Table(name = "Tweets")
+public class Tweet extends Model {
+	@Column(name="user")
+	private User user;
+    @Column(name = "text")
+    private String text;
+    @Column(name="created_at")
+    private String createdAt;
+    
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public String getBody() {
-        return getString("text");
+        return this.text;
     }
-
+/*
     public long getId() {
         return getLong("id");
     }
-    
+*/    
     public String getTimestamp() {
-    	return getString("created_at");
-    }
-
-    public boolean isFavorited() {
-        return getBoolean("favorited");
-    }
-
-    public boolean isRetweeted() {
-        return getBoolean("retweeted");
+    	return this.createdAt;
     }
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
-            tweet.jsonObject = jsonObject;
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+            tweet.text = "local storage"; //jsonObject.getString("text");
+            tweet.createdAt = jsonObject.getString("created_at");
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -58,16 +63,17 @@ public class Tweet extends BaseModel {
             }
 
             Tweet tweet = Tweet.fromJson(tweetJson);
+            tweet.save();
             if (tweet != null) {
                 tweets.add(tweet);
             }
         }
-
         return tweets;
     }
     
-    public void save(JSONObject jsonObject) {
-    	
-    	
+    public static ArrayList<Tweet> getAll() {
+    	List<Tweet> tw = new Select().from(Tweet.class)
+    	.execute();
+    	return (ArrayList<Tweet>) tw;
     }
 }

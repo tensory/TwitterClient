@@ -29,29 +29,29 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		 View view = convertView;
-		    if (view == null) {
-		    	LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		    	view = inflater.inflate(R.layout.tweet_item, null);
-		    }
+		View view = convertView;
+	    if (view == null) {
+	    	LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    	view = inflater.inflate(R.layout.tweet_item, null);
+	    }
 
-	        Tweet tweet = getItem(position);
-	        
-	        ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
-	        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
-	        
-	        TextView nameView = (TextView) view.findViewById(R.id.tvName);
-	        String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +
-	                tweet.getUser().getScreenName() + "</font></small>";
-	        nameView.setText(Html.fromHtml(formattedName));
-	        
-	        TextView timestampView = (TextView) view.findViewById(R.id.tvTimestamp);
-	        timestampView.setText(getFriendlyTimestamp(tweet.getTimestamp()));
+        Tweet tweet = getItem(position);
+        
+        ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
+        //ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
+        
+        TextView nameView = (TextView) view.findViewById(R.id.tvName);
+        String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +
+                tweet.getUser().getScreenName() + "</font></small>";
+        nameView.setText(Html.fromHtml(formattedName));
+        
+        TextView timestampView = (TextView) view.findViewById(R.id.tvTimestamp);
+        timestampView.setText(getFriendlyTimestamp(tweet.getTimestamp()));
 
-	        TextView bodyView = (TextView) view.findViewById(R.id.tvBody);
-	        bodyView.setText(Html.fromHtml(tweet.getBody()));
-	        
-	        return view;
+        TextView bodyView = (TextView) view.findViewById(R.id.tvBody);
+        bodyView.setText(Html.fromHtml(tweet.getBody()));
+        
+        return view;
 	}
 	
 	protected static String getFriendlyTimestamp(String original) {
