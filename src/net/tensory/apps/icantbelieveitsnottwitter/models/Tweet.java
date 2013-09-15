@@ -41,7 +41,7 @@ public class Tweet extends Model {
         Tweet tweet = new Tweet();
         try {
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
-            tweet.text = "local storage"; //jsonObject.getString("text");
+            tweet.text = jsonObject.getString("text");
             tweet.createdAt = jsonObject.getString("created_at");
         } catch (JSONException e) {
             e.printStackTrace();
