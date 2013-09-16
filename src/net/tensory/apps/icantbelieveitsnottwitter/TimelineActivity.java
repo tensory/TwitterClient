@@ -2,25 +2,24 @@ package net.tensory.apps.icantbelieveitsnottwitter;
 
 import java.util.ArrayList;
 
+import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import net.tensory.apps.icantbelieveitsnottwitter.R;
-import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
-
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-public class TimelineActivity extends Activity {
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+public class TimelineActivity extends FragmentActivity {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
 	private TimelineJsonHttpResponseHandler tweetRequestHandler;
 	
