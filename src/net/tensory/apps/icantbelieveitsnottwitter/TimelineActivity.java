@@ -1,7 +1,6 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,8 +9,6 @@ import org.json.JSONObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import net.tensory.apps.icantbelieveitsnottwitter.R;
-import net.tensory.apps.icantbelieveitsnottwitter.R.layout;
-import net.tensory.apps.icantbelieveitsnottwitter.R.menu;
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 
 import android.os.Bundle;
@@ -22,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
@@ -51,10 +47,8 @@ public class TimelineActivity extends Activity {
 		ArrayList<Tweet> tweets = Tweet.getAll();
 		try {
 			if (tweets.isEmpty()) {
-				Toast.makeText(getBaseContext(), "pulling from storage DIDN'T WORK", Toast.LENGTH_LONG).show();
 				throw new Exception("Not enough tweets");
 			}
-			Toast.makeText(getBaseContext(), "pulling from storage", Toast.LENGTH_LONG).show();
 			TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 			lv.setAdapter(tweetsAdapter);
 			tweetRequestHandler.setListView(lv);
