@@ -1,5 +1,8 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,9 +16,25 @@ public class TimelineActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timeline);		
+		setContentView(R.layout.activity_timeline);	
+		setupNavigationTabs();
 	}
 
+	private void setupNavigationTabs() {
+		ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayShowTitleEnabled(true);
+		
+		Tab tabHome = actionBar.newTab().setText(getResources().getString(R.string.tab_home))
+				.setTag("HomeTimelineFragment").setIcon(R.drawable.ic_home);
+		Tab tabMentions = actionBar.newTab().setText(getResources().getString(R.string.tab_mentions))
+				.setTag("MentionsFragment").setIcon(R.drawable.ic_mentions);
+		
+		actionBar.addTab(tabHome);
+		actionBar.addTab(tabMentions);
+		actionBar.selectTab(tabHome);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

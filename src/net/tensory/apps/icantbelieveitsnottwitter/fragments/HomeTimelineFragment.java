@@ -27,7 +27,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 		 
 		ListView lv = (ListView) getActivity().findViewById(R.id.lvTweets);
 		
-		fragmentTweets = (TweetsListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentTweetsList);
+		fragmentTweets = (TweetsListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentTweets);
 		
 		tweetRequestHandler = new TimelineJsonHttpResponseHandler(getActivity()) {
 			@Override
