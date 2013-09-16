@@ -148,8 +148,6 @@ public class TimelineActivity extends Activity {
 	protected abstract static class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
 		public static ListView tweetList;
 		public static Context context;
-		private ArrayList<Tweet> oldTweets;
-		private int itemsBoundary = 0;
 		
 		public TimelineJsonHttpResponseHandler() {
 			super();
@@ -157,7 +155,7 @@ public class TimelineActivity extends Activity {
 		
 		public TimelineJsonHttpResponseHandler(Context mContext) {
 			super();
-			this.context = mContext;
+			context = mContext;
 		}
 			
 		@Override
@@ -165,13 +163,33 @@ public class TimelineActivity extends Activity {
 		
 		public void setListView(ListView myTweetList) {
 			TimelineJsonHttpResponseHandler.tweetList = myTweetList;
-			
-			tweetList.setOnScrollListener(new EndlessScrollListener() {
-				@Override
-				public void loadMore(int page, int totalItemsCount) {
-					Toast.makeText(TimelineJsonHttpResponseHandler.context, "Scrolled", Toast.LENGTH_SHORT).show();
-				}
-			});
+			setListViewEvents();
+		}
+		
+		private void setListViewEvents() {
+			try {
+				tweetList.setOnScrollListener(new EndlessScrollListener() {
+					@Override
+					public void loadMore(int page, int totalItemsCount) {
+						TwitterClientApp.getRestClient().getHomeTimeline(new TimelineJsonHttpResponseHandler() {
+							@Override
+							public void onSuccess(JSONArray newJson) {
+								newJson = TimelineActivity.sanitizeStream(newJson);
+								ArrayList<Tweet> newTweets = Tweet.fromJson(newJson);
+								
+								// Get the adapter for the static ListView in the parent JsonHttpResponseHandler,
+								// and assign newTweets to it
+								TweetsAdapter tweetListAdapter = (TweetsAdapter) TimelineJsonHttpResponseHandler.tweetList.getAdapter();
+								tweetListAdapter.addAll(newTweets);
+								tweetListAdapter.notifyDataSetChanged();
+								//Toast.makeText(TimelineJsonHttpResponseHandler.context, "" + newJson.length(), Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
+				});	
+			} catch (NullPointerException npe) {
+				Log.e("LIST_VIEW", "No tweet ListView has been set ");
+			}
 		}
 	}
 }
