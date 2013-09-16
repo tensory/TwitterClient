@@ -1,8 +1,9 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class TimelineActivity extends FragmentActivity {
+public class TimelineActivity extends FragmentActivity implements TabListener {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
 	
 	@Override
@@ -26,9 +27,14 @@ public class TimelineActivity extends FragmentActivity {
 		actionBar.setDisplayShowTitleEnabled(true);
 		
 		Tab tabHome = actionBar.newTab().setText(getResources().getString(R.string.tab_home))
-				.setTag("HomeTimelineFragment").setIcon(R.drawable.ic_home);
+				.setTag("HomeTimelineFragment")
+				.setTabListener(this)
+				.setIcon(R.drawable.ic_home);
+		
 		Tab tabMentions = actionBar.newTab().setText(getResources().getString(R.string.tab_mentions))
-				.setTag("MentionsFragment").setIcon(R.drawable.ic_mentions);
+				.setTag("MentionsFragment")
+				.setTabListener(this)
+				.setIcon(R.drawable.ic_mentions);
 		
 		actionBar.addTab(tabHome);
 		actionBar.addTab(tabMentions);
@@ -77,5 +83,23 @@ public class TimelineActivity extends FragmentActivity {
 				*/
 	          }
 	      }
+	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
