@@ -1,60 +1,19 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
-import java.util.ArrayList;
-
-import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
+import android.widget.Toast;
 
 public class TimelineActivity extends FragmentActivity {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
-	private TimelineJsonHttpResponseHandler tweetRequestHandler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timeline);
-		ListView lv = (ListView) findViewById(R.id.lvTweets);
-		
-		tweetRequestHandler = new TimelineJsonHttpResponseHandler(getApplicationContext()) {
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				jsonTweets = TimelineActivity.sanitizeStream(jsonTweets);
-				
-				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-				ListView lv = (ListView) findViewById(R.id.lvTweets);
-				TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
-				lv.setAdapter(tweetsAdapter);
-				
-				this.setListView(lv);
-			}
-		};
-		
-		ArrayList<Tweet> tweets = Tweet.getAll();
-		try {
-			if (tweets.isEmpty()) {
-				throw new Exception("Not enough tweets");
-			}
-			TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
-			lv.setAdapter(tweetsAdapter);
-			tweetRequestHandler.setListView(lv);
-		} catch (Exception e) {
-			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);			
-		}
-		
+		setContentView(R.layout.activity_timeline);		
 	}
 
 	@Override
@@ -76,23 +35,6 @@ public class TimelineActivity extends FragmentActivity {
 	    return true;
 	  }
 	
-	protected static JSONArray sanitizeStream(JSONArray tweets) {
-		/* Tweet censoring, because I don't want to see certain retweets during development */
-		JSONArray sanitized = new JSONArray();
-		for (int i = 0; i < tweets.length(); i++) {
-			JSONObject tweet;
-			try {
-				tweet = tweets.getJSONObject(i);
-				if (tweet.getString("text").contains("Dymaxion") == false && tweet.getString("text").contains("Shanley") == false) {
-					sanitized.put((JSONObject) tweet);
-				}
-			} catch (JSONException e) {
-				Log.e("BAD_TWEET", e.getStackTrace().toString());
-			}
-		}
-		return sanitized;
-	}
-	
 	private void startComposeAction() {
 		Intent i = new Intent(getBaseContext(), ComposeActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -103,67 +45,18 @@ public class TimelineActivity extends FragmentActivity {
 	          Intent data) {
 	      if (requestCode == COMPOSE_ACTIVITY_ID) {
 	          if (resultCode == RESULT_OK) {
-	      		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
+	        	  Toast.makeText(getApplicationContext(), "Fix your closing handler for Compose", Toast.LENGTH_LONG).show();
+	        	  /*
+	      		TwitterClientApp.getRestClient().getHomeTimeline(new TweetsListFragment.TimelineJsonHttpResponseHandler() {
+					
+					@Override
+					public void onSuccess(JSONArray jsonTweets) {
+						// TODO Auto-generated method stub
+						
+					}
+				};TimelineJsonHttpResponseHandler(getBaseContext()));
+				*/
 	          }
 	      }
-	}
-	
-	protected abstract static class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
-		public static ListView tweetList;
-		public static Context context;
-		public static long lastTweetId;
-		
-		public TimelineJsonHttpResponseHandler() {
-			super();
-		}
-		
-		public TimelineJsonHttpResponseHandler(Context mContext) {
-			super();
-			context = mContext;
-		}
-			
-		@Override
-		public abstract void onSuccess(JSONArray jsonTweets);
-		
-		public void setListView(ListView myTweetList) {
-			TimelineJsonHttpResponseHandler.tweetList = myTweetList;
-			setListViewEvents();
-		}
-		
-		protected static void setLastTweetId(long id) {
-			TimelineJsonHttpResponseHandler.lastTweetId = id;
-		}
-		
-		private void setListViewEvents() {
-			try {
-				tweetList.setOnScrollListener(new EndlessScrollListener() {
-					@Override
-					public void loadMore(int page, int totalItemsCount) {
-						Tweet lastTweet = (Tweet) tweetList.getItemAtPosition(tweetList.getAdapter().getCount() - 1);
-						TimelineJsonHttpResponseHandler.setLastTweetId(lastTweet.getTweetId());
-						TwitterClientApp.getRestClient().getOlderTimeline(new TimelineJsonHttpResponseHandler() {
-							@Override
-							public void onSuccess(JSONArray newJson) {
-								newJson = TimelineActivity.sanitizeStream(newJson);
-								ArrayList<Tweet> newTweets = Tweet.fromJson(newJson);
-								
-								// Delete the first tweet if its tweetID is the same as the oldest in the last batch
-								if (newTweets.get(0).getTweetId() == TimelineJsonHttpResponseHandler.lastTweetId) {
-									newTweets.remove(0);
-								}
-								
-								// Get the adapter for the static ListView in the parent JsonHttpResponseHandler,
-								// and assign newTweets to it
-								TweetsAdapter tweetListAdapter = (TweetsAdapter) TimelineJsonHttpResponseHandler.tweetList.getAdapter();
-								tweetListAdapter.addAll(newTweets);
-								tweetListAdapter.notifyDataSetChanged();
-							}
-						}, TimelineJsonHttpResponseHandler.lastTweetId);
-					}
-				});	
-			} catch (NullPointerException npe) {
-				Log.e("LIST_VIEW_EXCEPTION", npe.getStackTrace().toString());
-			}
-		}
 	}
 }
