@@ -34,7 +34,7 @@ public class TimelineActivity extends Activity {
 		setContentView(R.layout.activity_timeline);
 		ListView lv = (ListView) findViewById(R.id.lvTweets);
 		
-		tweetRequestHandler = new TimelineJsonHttpResponseHandler() {
+		tweetRequestHandler = new TimelineJsonHttpResponseHandler(getApplicationContext()) {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				jsonTweets = TimelineActivity.sanitizeStream(jsonTweets);
@@ -67,16 +67,7 @@ public class TimelineActivity extends Activity {
 			Toast.makeText(getBaseContext(), "pulling from storage", Toast.LENGTH_LONG).show();
 			TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 			lv.setAdapter(tweetsAdapter);
-			
 			tweetRequestHandler.setListView(lv);
-			/*
-			lv.setOnScrollListener(new EndlessScrollListener() {
-				@Override
-				public void loadMore(int page, int totalItemsCount) {
-					loadNewTweets(totalItemsCount);
-				}
-			});
-			*/
 		} catch (Exception e) {
 			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);			
 		}
@@ -156,11 +147,17 @@ public class TimelineActivity extends Activity {
 	
 	protected abstract static class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
 		public static ListView tweetList;
+		public static Context context;
 		private ArrayList<Tweet> oldTweets;
 		private int itemsBoundary = 0;
 		
 		public TimelineJsonHttpResponseHandler() {
 			super();
+		}
+		
+		public TimelineJsonHttpResponseHandler(Context mContext) {
+			super();
+			this.context = mContext;
 		}
 			
 		@Override
@@ -168,6 +165,13 @@ public class TimelineActivity extends Activity {
 		
 		public void setListView(ListView myTweetList) {
 			TimelineJsonHttpResponseHandler.tweetList = myTweetList;
+			
+			tweetList.setOnScrollListener(new EndlessScrollListener() {
+				@Override
+				public void loadMore(int page, int totalItemsCount) {
+					Toast.makeText(TimelineJsonHttpResponseHandler.context, "Scrolled", Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
 	}
 }
