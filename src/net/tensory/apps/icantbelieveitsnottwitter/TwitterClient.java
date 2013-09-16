@@ -29,6 +29,7 @@ public class TwitterClient extends OAuthBaseClient {
     public static final String REST_CALLBACK_URL = "oauth://icantbelieveitsnottwitter"; // Change this (here and in manifest)
     
     private static final String HOME_TIMELINE_URL = "statuses/home_timeline.json";
+    private static final String MENTIONS_URL = "statuses/mentions_timeline.json";
     
 	public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -47,6 +48,11 @@ public class TwitterClient extends OAuthBaseClient {
     	long incrementedId = oldestTweetId + 1;
     	params.put("max_id", "" + incrementedId);
     	client.get(url, params, handler);
+    }
+    
+    public void getMentions(AsyncHttpResponseHandler handler) {
+    	String url = getApiUrl(MENTIONS_URL);
+    	client.get(url, null, handler);
     }
     
     public void postTweet(String content, AsyncHttpResponseHandler handler) {
