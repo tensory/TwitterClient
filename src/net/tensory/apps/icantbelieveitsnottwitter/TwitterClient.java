@@ -28,13 +28,25 @@ public class TwitterClient extends OAuthBaseClient {
     public static final String REST_CONSUMER_SECRET = "8ss5z6LZQCgFUBuIxSscHWTdqqNDQlRPBN4H8PWFzo"; // Change this
     public static final String REST_CALLBACK_URL = "oauth://icantbelieveitsnottwitter"; // Change this (here and in manifest)
     
+    private static final String HOME_TIMELINE_URL = "statuses/home_timeline.json";
+    
 	public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
     
-    public void getHomeTimeline(AsyncHttpResponseHandler handler) {
-    	String url = getApiUrl("statuses/home_timeline.json");
+	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+    	String url = getApiUrl(HOME_TIMELINE_URL);
     	client.get(url, null, handler);
+    }
+    
+    public void getOlderTimeline(AsyncHttpResponseHandler handler, long oldestTweetId) {
+    	// Get tweets older than the specified oldestTweetId 
+    	// that belong in this timeline
+    	String url = getApiUrl(HOME_TIMELINE_URL);
+    	RequestParams params = new RequestParams();
+    	long incrementedId = oldestTweetId + 1;
+    	params.put("max_id", "" + incrementedId);
+    	client.get(url, params, handler);
     }
     
     public void postTweet(String content, AsyncHttpResponseHandler handler) {

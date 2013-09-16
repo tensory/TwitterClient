@@ -20,6 +20,8 @@ public class Tweet extends Model {
     private String text;
     @Column(name="created_at")
     private String createdAt;
+    @Column(name="tweetId")
+    private long tweetId;
     
     public User getUser() {
         return this.user;
@@ -32,6 +34,10 @@ public class Tweet extends Model {
     public String getTimestamp() {
     	return this.createdAt;
     }
+    
+    public long getTweetId() {
+    	return this.tweetId;
+    }
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -39,6 +45,7 @@ public class Tweet extends Model {
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             tweet.text = jsonObject.getString("text");
             tweet.createdAt = jsonObject.getString("created_at");
+            tweet.tweetId = jsonObject.getLong("id");
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

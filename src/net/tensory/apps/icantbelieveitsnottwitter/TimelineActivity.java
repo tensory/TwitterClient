@@ -45,16 +45,6 @@ public class TimelineActivity extends Activity {
 				lv.setAdapter(tweetsAdapter);
 				
 				this.setListView(lv);
-				
-				/*
-				lv.setOnScrollListener(new EndlessScrollListener() {
-					@Override
-					public void loadMore(int page, int totalItemsCount) {
-						Toast.makeText(getBaseContext(), "Wanna load more tweets now...", Toast.LENGTH_LONG).show();
-					}
-				});
-				*/
-				
 			}
 		};
 		
@@ -73,27 +63,7 @@ public class TimelineActivity extends Activity {
 		}
 		
 	}
-/*
-	public void loadNewTweets(int totalItemsCount) {
-		TwitterClientApp.getRestClient().getHomeTimeline(new TimelineJsonHttpResponseHandler(totalItemsCount) {
-			ArrayList<Tweet> existingTweets;
-			
-			public JsonHttpResponseHandler(ArrayList<Tweet> tweets) {
-				super();
-				
-			}
-			
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				jsonTweets = sanitizeStream(jsonTweets);
-				totalItemsCount = 1;
-			}
-		});
-		Toast.makeText(getBaseContext(), totalItemsCount + " tweets ...", Toast.LENGTH_LONG).show();
-		
-	}
-	*/
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -148,6 +118,7 @@ public class TimelineActivity extends Activity {
 	protected abstract static class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
 		public static ListView tweetList;
 		public static Context context;
+		public static long lastTweetId;
 		
 		public TimelineJsonHttpResponseHandler() {
 			super();
@@ -166,12 +137,18 @@ public class TimelineActivity extends Activity {
 			setListViewEvents();
 		}
 		
+		protected static void setLastTweetId(long id) {
+			TimelineJsonHttpResponseHandler.lastTweetId = id;
+		}
+		
 		private void setListViewEvents() {
 			try {
 				tweetList.setOnScrollListener(new EndlessScrollListener() {
 					@Override
 					public void loadMore(int page, int totalItemsCount) {
-						TwitterClientApp.getRestClient().getHomeTimeline(new TimelineJsonHttpResponseHandler() {
+						Tweet lastTweet = (Tweet) tweetList.getItemAtPosition(tweetList.getAdapter().getCount() - 1);
+						TimelineJsonHttpResponseHandler.setLastTweetId(lastTweet.getTweetId());
+						TwitterClientApp.getRestClient().getOlderTimeline(new TimelineJsonHttpResponseHandler() {
 							@Override
 							public void onSuccess(JSONArray newJson) {
 								newJson = TimelineActivity.sanitizeStream(newJson);
@@ -184,11 +161,11 @@ public class TimelineActivity extends Activity {
 								tweetListAdapter.notifyDataSetChanged();
 								//Toast.makeText(TimelineJsonHttpResponseHandler.context, "" + newJson.length(), Toast.LENGTH_SHORT).show();
 							}
-						});
+						}, TimelineJsonHttpResponseHandler.lastTweetId);
 					}
 				});	
 			} catch (NullPointerException npe) {
-				Log.e("LIST_VIEW", "No tweet ListView has been set ");
+				Log.e("LIST_VIEW_EXCEPTION", npe.getStackTrace().toString());
 			}
 		}
 	}
