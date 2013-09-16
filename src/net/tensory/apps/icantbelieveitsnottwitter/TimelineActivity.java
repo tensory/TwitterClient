@@ -154,12 +154,16 @@ public class TimelineActivity extends Activity {
 								newJson = TimelineActivity.sanitizeStream(newJson);
 								ArrayList<Tweet> newTweets = Tweet.fromJson(newJson);
 								
+								// Delete the first tweet if its tweetID is the same as the oldest in the last batch
+								if (newTweets.get(0).getTweetId() == TimelineJsonHttpResponseHandler.lastTweetId) {
+									newTweets.remove(0);
+								}
+								
 								// Get the adapter for the static ListView in the parent JsonHttpResponseHandler,
 								// and assign newTweets to it
 								TweetsAdapter tweetListAdapter = (TweetsAdapter) TimelineJsonHttpResponseHandler.tweetList.getAdapter();
 								tweetListAdapter.addAll(newTweets);
 								tweetListAdapter.notifyDataSetChanged();
-								//Toast.makeText(TimelineJsonHttpResponseHandler.context, "" + newJson.length(), Toast.LENGTH_SHORT).show();
 							}
 						}, TimelineJsonHttpResponseHandler.lastTweetId);
 					}
