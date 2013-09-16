@@ -1,5 +1,7 @@
 package net.tensory.apps.icantbelieveitsnottwitter;
 
+import net.tensory.apps.icantbelieveitsnottwitter.fragments.HomeTimelineFragment;
+import net.tensory.apps.icantbelieveitsnottwitter.fragments.MentionsFragment;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -7,12 +9,15 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 public class TimelineActivity extends FragmentActivity implements TabListener {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
+	private static final String HOME_TAG = "HomeTimelineFragment";
+	private static final String MENTIONS_TAG = "MentionsFragment";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +32,12 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 		actionBar.setDisplayShowTitleEnabled(true);
 		
 		Tab tabHome = actionBar.newTab().setText(getResources().getString(R.string.tab_home))
-				.setTag("HomeTimelineFragment")
+				.setTag(HOME_TAG)
 				.setTabListener(this)
 				.setIcon(R.drawable.ic_home);
 		
 		Tab tabMentions = actionBar.newTab().setText(getResources().getString(R.string.tab_mentions))
-				.setTag("MentionsFragment")
+				.setTag(MENTIONS_TAG)
 				.setTabListener(this)
 				.setIcon(R.drawable.ic_mentions);
 		
@@ -92,9 +97,16 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	}
 
 	@Override
-	public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
-		
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		FragmentManager manager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+		if (tab.getTag() == HOME_TAG) {
+			// Set the fragment in frameLayout to use the HomeTimelineFragment
+			fts.replace(R.id.frameLayout, new HomeTimelineFragment());
+		} else if (tab.getTag() == MENTIONS_TAG) {
+			fts.replace(R.id.frameLayout, new MentionsFragment());
+		}
+		fts.commit();
 	}
 
 	@Override
