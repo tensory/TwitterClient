@@ -26,25 +26,37 @@ import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
 	public static final int COMPOSE_ACTIVITY_ID = 2;
-	protected JsonHttpResponseHandler tweetRequestHandler; 
+	private TimelineJsonHttpResponseHandler tweetRequestHandler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		tweetRequestHandler = new JsonHttpResponseHandler() {
+		ListView lv = (ListView) findViewById(R.id.lvTweets);
+		
+		tweetRequestHandler = new TimelineJsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
-				jsonTweets = sanitizeStream(jsonTweets);
+				jsonTweets = TimelineActivity.sanitizeStream(jsonTweets);
 				
 				ArrayList<Tweet> tweets = Tweet.fromJson(jsonTweets);
-				TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 				ListView lv = (ListView) findViewById(R.id.lvTweets);
+				TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 				lv.setAdapter(tweetsAdapter);
+				
+				this.setListView(lv);
+				
+				/*
+				lv.setOnScrollListener(new EndlessScrollListener() {
+					@Override
+					public void loadMore(int page, int totalItemsCount) {
+						Toast.makeText(getBaseContext(), "Wanna load more tweets now...", Toast.LENGTH_LONG).show();
+					}
+				});
+				*/
+				
 			}
 		};
-		
-		
 		
 		ArrayList<Tweet> tweets = Tweet.getAll();
 		try {
@@ -53,17 +65,44 @@ public class TimelineActivity extends Activity {
 				throw new Exception("Not enough tweets");
 			}
 			Toast.makeText(getBaseContext(), "pulling from storage", Toast.LENGTH_LONG).show();
-			ListView lv = (ListView) findViewById(R.id.lvTweets);
-			
 			TweetsAdapter tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 			lv.setAdapter(tweetsAdapter);
 			
+			tweetRequestHandler.setListView(lv);
+			/*
+			lv.setOnScrollListener(new EndlessScrollListener() {
+				@Override
+				public void loadMore(int page, int totalItemsCount) {
+					loadNewTweets(totalItemsCount);
+				}
+			});
+			*/
 		} catch (Exception e) {
 			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);			
 		}
 		
 	}
-
+/*
+	public void loadNewTweets(int totalItemsCount) {
+		TwitterClientApp.getRestClient().getHomeTimeline(new TimelineJsonHttpResponseHandler(totalItemsCount) {
+			ArrayList<Tweet> existingTweets;
+			
+			public JsonHttpResponseHandler(ArrayList<Tweet> tweets) {
+				super();
+				
+			}
+			
+			@Override
+			public void onSuccess(JSONArray jsonTweets) {
+				jsonTweets = sanitizeStream(jsonTweets);
+				totalItemsCount = 1;
+			}
+		});
+		Toast.makeText(getBaseContext(), totalItemsCount + " tweets ...", Toast.LENGTH_LONG).show();
+		
+	}
+	*/
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -83,7 +122,7 @@ public class TimelineActivity extends Activity {
 	    return true;
 	  }
 	
-	private JSONArray sanitizeStream(JSONArray tweets) {
+	protected static JSONArray sanitizeStream(JSONArray tweets) {
 		/* Tweet censoring, because I don't want to see certain retweets during development */
 		JSONArray sanitized = new JSONArray();
 		for (int i = 0; i < tweets.length(); i++) {
@@ -113,5 +152,22 @@ public class TimelineActivity extends Activity {
 	      		TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);
 	          }
 	      }
+	}
+	
+	protected abstract static class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
+		public static ListView tweetList;
+		private ArrayList<Tweet> oldTweets;
+		private int itemsBoundary = 0;
+		
+		public TimelineJsonHttpResponseHandler() {
+			super();
+		}
+			
+		@Override
+		public abstract void onSuccess(JSONArray jsonTweets);
+		
+		public void setListView(ListView myTweetList) {
+			TimelineJsonHttpResponseHandler.tweetList = myTweetList;
+		}
 	}
 }
