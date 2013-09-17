@@ -13,7 +13,6 @@ import net.tensory.apps.icantbelieveitsnottwitter.R;
 import net.tensory.apps.icantbelieveitsnottwitter.TweetsAdapter;
 import net.tensory.apps.icantbelieveitsnottwitter.TwitterClientApp;
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -68,16 +67,15 @@ public class TweetsListFragment extends Fragment {
 	
 	public abstract class TimelineJsonHttpResponseHandler extends JsonHttpResponseHandler {
 		public ListView tweetList;
-		public Context context;
-		public long lastTweetId;
+		private long lastTweetId;
 		
 		public TimelineJsonHttpResponseHandler() {
 			super();
 		}
 		
-		public TimelineJsonHttpResponseHandler(Context mContext) {
+		public TimelineJsonHttpResponseHandler(long lastTweetId) {
 			super();
-			context = mContext;
+			this.lastTweetId = lastTweetId;
 		}
 			
 		@Override
@@ -88,17 +86,13 @@ public class TweetsListFragment extends Fragment {
 			setListViewEvents();
 		}
 		
-		protected void setLastTweetId(long id) {
-			lastTweetId = id;
-		}
-		
 		private void setListViewEvents() {
 			try {
 				tweetList.setOnScrollListener(new EndlessScrollListener() {
 					@Override
 					public void loadMore(int page, int totalItemsCount) {
-						Tweet lastTweet = (Tweet) tweetList.getItemAtPosition(tweetList.getAdapter().getCount() - 1);
-						setLastTweetId(lastTweet.getTweetId());
+						Tweet lastTweet = (Tweet) tweetList.getItemAtPosition(getAdapter().getCount() - 1);
+						lastTweetId = lastTweet.getTweetId();
 						TwitterClientApp.getRestClient().getOlderTimeline(new TimelineJsonHttpResponseHandler() {
 							@Override
 							public void onSuccess(JSONArray newJson) {
@@ -112,7 +106,7 @@ public class TweetsListFragment extends Fragment {
 								
 								// Get the adapter for the static ListView in the parent JsonHttpResponseHandler,
 								// and assign newTweets to it
-								TweetsAdapter tweetListAdapter = (TweetsAdapter) tweetList.getAdapter();
+								TweetsAdapter tweetListAdapter = (TweetsAdapter) getAdapter();
 								tweetListAdapter.addAll(newTweets);
 								tweetListAdapter.notifyDataSetChanged();
 							}

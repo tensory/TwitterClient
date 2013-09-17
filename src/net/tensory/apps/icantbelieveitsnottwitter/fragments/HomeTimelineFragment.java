@@ -12,7 +12,7 @@ import org.json.JSONArray;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -29,7 +29,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 		
 		fragmentTweets = (TweetsListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frameLayout);
 		
-		tweetRequestHandler = new TimelineJsonHttpResponseHandler(getActivity()) {
+		tweetRequestHandler = new TimelineJsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				jsonTweets = TweetsListFragment.sanitizeStream(jsonTweets);
