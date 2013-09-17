@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class TimelineActivity extends FragmentActivity implements TabListener {
+	public static final int PROFILE_ACTIVITY_ID = 1;
 	public static final int COMPOSE_ACTIVITY_ID = 2;
 	private static final String HOME_TAG = "HomeTimelineFragment";
 	private static final String MENTIONS_TAG = "MentionsFragment";
@@ -57,20 +58,22 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_compose:
-	      startComposeAction();
+			startActionWithoutAnimation(ComposeActivity.class, COMPOSE_ACTIVITY_ID);
 	      break;
+		case R.id.action_profile:
+			startActionWithoutAnimation(ProfileActivity.class, PROFILE_ACTIVITY_ID);
 	    default:
 	    	break;
 	    }
 	    return true;
 	  }
 	
-	private void startComposeAction() {
-		Intent i = new Intent(getBaseContext(), ComposeActivity.class);
+	private void startActionWithoutAnimation(Class theClass, int resultId) {
+		Intent i = new Intent(getBaseContext(), theClass);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		startActivityForResult(i, COMPOSE_ACTIVITY_ID);
+		startActivityForResult(i, resultId);
 	}
-	
+
 	protected void onActivityResult(int requestCode, int resultCode,
 	          Intent data) {
 	      if (requestCode == COMPOSE_ACTIVITY_ID) {
