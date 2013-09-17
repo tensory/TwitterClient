@@ -40,19 +40,25 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, null, handler);
     }
     
-    public void getOlderTimeline(AsyncHttpResponseHandler handler, long oldestTweetId) {
+    public void getHomeTimeline(AsyncHttpResponseHandler handler, long oldestTweetId) {
     	// Get tweets older than the specified oldestTweetId 
     	// that belong in this timeline
     	String url = getApiUrl(HOME_TIMELINE_URL);
     	RequestParams params = new RequestParams();
-    	long incrementedId = oldestTweetId + 1;
-    	params.put("max_id", "" + incrementedId);
+    	params.put("max_id", String.valueOf(oldestTweetId));
     	client.get(url, params, handler);
     }
     
     public void getMentions(AsyncHttpResponseHandler handler) {
     	String url = getApiUrl(MENTIONS_URL);
     	client.get(url, null, handler);
+    }
+    
+    public void getMentions(AsyncHttpResponseHandler handler, long oldestTweetId) {
+    	String url = getApiUrl(MENTIONS_URL);
+    	RequestParams params = new RequestParams();
+    	params.put("max_id", String.valueOf(oldestTweetId));
+    	client.get(url, params, handler);
     }
     
     public void postTweet(String content, AsyncHttpResponseHandler handler) {

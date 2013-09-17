@@ -20,14 +20,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class TweetsListFragment extends Fragment {
 	private TweetsAdapter tweetsAdapter;
-	private ListView lv;
+	protected ListView lv;
 	
 	@Override
 	public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
-		return inf.inflate(R.layout.fragment_tweets_list, parent, false);
+		View v = inf.inflate(R.layout.fragment_tweets_list, parent, false);
+		lv = (ListView) v.findViewById(R.id.lvTweets);
+		return v;
 	}
 	
 	@Override
@@ -81,6 +84,12 @@ public class TweetsListFragment extends Fragment {
 		@Override
 		public abstract void onSuccess(JSONArray jsonTweets);
 		
+		@Override 
+		public void onFailure(Throwable error) {
+			Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+			Log.d("TIMELINE_ERROR", error.getMessage());
+		}
+		
 		public void setListView(ListView myTweetList) {
 			tweetList = myTweetList;
 			setListViewEvents();
@@ -91,11 +100,13 @@ public class TweetsListFragment extends Fragment {
 				tweetList.setOnScrollListener(new EndlessScrollListener() {
 					@Override
 					public void loadMore(int page, int totalItemsCount) {
-						Tweet lastTweet = (Tweet) tweetList.getItemAtPosition(getAdapter().getCount() - 1);
+						Tweet lastTweet = getAdapter().getItem(getAdapter().getCount() - 1);
 						lastTweetId = lastTweet.getTweetId();
-						TwitterClientApp.getRestClient().getOlderTimeline(new TimelineJsonHttpResponseHandler() {
+						
+						TwitterClientApp.getRestClient().getHomeTimeline(new TimelineJsonHttpResponseHandler() {	
 							@Override
 							public void onSuccess(JSONArray newJson) {
+								Log.d("yes im nuts", newJson.toString());
 								newJson = TweetsListFragment.sanitizeStream(newJson);
 								ArrayList<Tweet> newTweets = Tweet.fromJson(newJson);
 								
