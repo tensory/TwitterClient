@@ -6,10 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
-import net.tensory.apps.icantbelieveitsnottwitter.TimelineActivity;
 import android.content.Context;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -20,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TweetsAdapter extends ArrayAdapter<Tweet> {
 
@@ -35,14 +33,15 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 	    	view = inflater.inflate(R.layout.tweet_item, null);
 	    }
 
-        Tweet tweet = getItem(position);
-        
+	    Tweet tweet = getItem(position);
+	    
         ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
         ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
-        
+        imageView.setOnClickListener(new ProfileImageOnClickListener(tweet.getUser()));
+       
         TextView nameView = (TextView) view.findViewById(R.id.tvName);
         String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +
-                tweet.getUser().getScreenName() + "</font></small>";
+        		tweet.getUser().getScreenName() + "</font></small>";
         nameView.setText(Html.fromHtml(formattedName));
         
         TextView timestampView = (TextView) view.findViewById(R.id.tvTimestamp);
