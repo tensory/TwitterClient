@@ -11,5 +11,7 @@
     <string name="tab_home">Home</string>
     <string name="tab_mentions">Mentions</string>
     <string name="action_profile">Profile</string>
-    
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>
