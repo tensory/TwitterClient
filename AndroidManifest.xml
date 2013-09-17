@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name="net.tensory.apps.icantbelieveitsnottwitter.ProfileActivity"
-            android:label="@string/title_activity_profile" >
+            android:label="" >
         </activity>
     </application>
 

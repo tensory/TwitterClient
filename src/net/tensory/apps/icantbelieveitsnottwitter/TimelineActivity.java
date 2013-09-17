@@ -68,8 +68,8 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	    return true;
 	  }
 	
-	private void startActionWithoutAnimation(Class theClass, int resultId) {
-		Intent i = new Intent(getBaseContext(), theClass);
+	private void startActionWithoutAnimation(Class targetClass, int resultId) {
+		Intent i = new Intent(getBaseContext(), targetClass);
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivityForResult(i, resultId);
 	}
