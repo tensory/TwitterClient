@@ -1,10 +1,5 @@
 package net.tensory.apps.icantbelieveitsnottwitter.fragments;
 
-import java.util.ArrayList;
-
-import net.tensory.apps.icantbelieveitsnottwitter.EndlessScrollListener;
-import net.tensory.apps.icantbelieveitsnottwitter.R;
-import net.tensory.apps.icantbelieveitsnottwitter.TweetsAdapter;
 import net.tensory.apps.icantbelieveitsnottwitter.TwitterClientApp;
 import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 

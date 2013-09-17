@@ -4,14 +4,14 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.User;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

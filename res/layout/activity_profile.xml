@@ -8,4 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ProfileActivity" >
 
+    <fragment
+        android:id="@+id/fragmentUserTimeline"
+        android:name="net.tensory.apps.icantbelieveitsnottwitter.fragments.UserTimelineFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout="@layout/fragment_tweets_list" />
+
 </RelativeLayout>
