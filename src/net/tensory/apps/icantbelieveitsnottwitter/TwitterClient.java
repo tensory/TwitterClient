@@ -30,6 +30,9 @@ public class TwitterClient extends OAuthBaseClient {
     
     private static final String HOME_TIMELINE_URL = "statuses/home_timeline.json";
     private static final String MENTIONS_URL = "statuses/mentions_timeline.json";
+    private static final String VERIFY_CREDENTIALS_URL = "account/verify_credentials.json";
+    private static final String SHOW_USER_URL = "users/show.json";
+    
     
 	public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -58,6 +61,18 @@ public class TwitterClient extends OAuthBaseClient {
     	String url = getApiUrl(MENTIONS_URL);
     	RequestParams params = new RequestParams();
     	params.put("max_id", String.valueOf(oldestTweetId));
+    	client.get(url, params, handler);
+    }
+    
+    public void getUserInfo(AsyncHttpResponseHandler handler) {
+    	String url = getApiUrl(VERIFY_CREDENTIALS_URL);
+    	client.get(url, null, handler);
+    }
+    
+    public void getUserInfo(AsyncHttpResponseHandler handler, String screenName) {
+    	String url = getApiUrl(SHOW_USER_URL);
+    	RequestParams params = new RequestParams();
+    	params.put("screen_name", screenName);
     	client.get(url, params, handler);
     }
     
