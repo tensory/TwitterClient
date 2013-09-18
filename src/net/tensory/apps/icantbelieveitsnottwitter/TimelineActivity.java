@@ -79,6 +79,11 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	      if (requestCode == COMPOSE_ACTIVITY_ID) {
 	          if (resultCode == RESULT_OK) {
 	        	  Toast.makeText(getApplicationContext(), "Fix your closing handler for Compose", Toast.LENGTH_LONG).show();
+	        	  FragmentManager manager = getSupportFragmentManager();
+	        	  android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+	        	  fts.replace(R.id.frameLayout, new HomeTimelineFragment());
+	        	  fts.commit();
+	        	  
 	        	  /*
 	      		TwitterClientApp.getRestClient().getHomeTimeline(new TweetsListFragment.TimelineJsonHttpResponseHandler() {
 					
