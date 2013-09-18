@@ -6,6 +6,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 import org.json.JSONArray;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -62,6 +63,8 @@ public class UserTimelineFragment extends TweetsListFragment {
 		}
 	}
 */
+
+	
 	public UserTimelineFragment() {
 		// TODO Auto-generated constructor stub
 	}

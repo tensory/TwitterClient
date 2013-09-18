@@ -73,31 +73,19 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 		i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivityForResult(i, resultId);
 	}
-
+/*
 	protected void onActivityResult(int requestCode, int resultCode,
 	          Intent data) {
 	      if (requestCode == COMPOSE_ACTIVITY_ID) {
 	          if (resultCode == RESULT_OK) {
-	        	  Toast.makeText(getApplicationContext(), "Fix your closing handler for Compose", Toast.LENGTH_LONG).show();
 	        	  FragmentManager manager = getSupportFragmentManager();
 	        	  android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
 	        	  fts.replace(R.id.frameLayout, new HomeTimelineFragment());
 	        	  fts.commit();
-	        	  
-	        	  /*
-	      		TwitterClientApp.getRestClient().getHomeTimeline(new TweetsListFragment.TimelineJsonHttpResponseHandler() {
-					
-					@Override
-					public void onSuccess(JSONArray jsonTweets) {
-						// TODO Auto-generated method stub
-						
-					}
-				};TimelineJsonHttpResponseHandler(getBaseContext()));
-				*/
 	          }
 	      }
 	}
-
+*/
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
 		// TODO Auto-generated method stub

@@ -11,6 +11,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 import org.json.JSONArray;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -18,10 +19,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
 	private TweetsListFragment fragmentTweets;
 	private JsonHttpResponseHandler tweetRequestHandler;
 	private long lastTweetId;
+	private boolean shouldExecuteOnResume = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.shouldExecuteOnResume = false;
 		
 		fragmentTweets = (TweetsListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frameLayout);
 		tweetRequestHandler = new JsonHttpResponseHandler() {
@@ -69,6 +72,31 @@ public class HomeTimelineFragment extends TweetsListFragment {
 			lv.setAdapter(tweetsAdapter);
 		} catch (Exception e) {
 			TwitterClientApp.getRestClient().getHomeTimeline(tweetRequestHandler);			
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (this.shouldExecuteOnResume) {
+			TwitterClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(JSONArray newJson) {
+					newJson = TweetsListFragment.sanitizeStream(newJson);
+					ArrayList<Tweet> newTweets = Tweet.fromJson(newJson);
+					TweetsAdapter tweetListAdapter = (TweetsAdapter) getAdapter();
+					tweetListAdapter.clear();
+					tweetListAdapter.addAll(newTweets);
+					tweetListAdapter.notifyDataSetChanged();
+				}
+				
+				@Override
+				public void onFailure(Throwable error) {
+					Log.e("LOAD_TWEET_FAIL", error.getStackTrace().toString());
+				}
+			});
+		} else {
+			this.shouldExecuteOnResume = true;
 		}
 	}
 }
