@@ -20,9 +20,11 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TweetsAdapter extends ArrayAdapter<Tweet> {
-
+	Context myContext;
+	
 	public TweetsAdapter(Context context, List<Tweet> tweets) {
 		super(context, 0, tweets);
+		myContext = context;
 	}
 	
 	@Override
@@ -37,7 +39,7 @@ public class TweetsAdapter extends ArrayAdapter<Tweet> {
 	    
         ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
         ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
-        imageView.setOnClickListener(new ProfileImageOnClickListener(tweet.getUser()));
+        imageView.setOnClickListener(new ProfileImageOnClickListener(myContext, tweet.getUser()));
        
         TextView nameView = (TextView) view.findViewById(R.id.tvName);
         String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + " <small><font color='#777777'>@" +

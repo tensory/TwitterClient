@@ -4,6 +4,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.User;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -20,7 +21,20 @@ public class ProfileActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
-		loadProfileInfo();
+		
+		String userScreenName = "";
+		try {
+			userScreenName = getIntent().getExtras().getString("userScreenName");
+		} catch (Exception e) {
+			Log.e("USERNAME_NOT_PROVIDED", e.getStackTrace().toString());
+		}
+		
+		if (userScreenName.length() > 0) {
+			loadProfileInfo(userScreenName);
+		} else {
+			loadProfileInfo();
+		}
+		
 	}
 
 	@Override
@@ -55,6 +69,18 @@ public class ProfileActivity extends FragmentActivity {
 				Log.d("USER_DATA", userData.toString());
 			} 
 		});
+	}
+	
+	private void loadProfileInfo(String screenName) {
+		TwitterClientApp.getRestClient().getUserInfo(new JsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(JSONObject userData) {
+				User u = User.fromJson(userData);
+				getActionBar().setTitle("@" + u.getScreenName());
+				populateProfileHeader(u);
+				Log.d("USER_DATA", userData.toString());
+			} 
+		}, screenName);
 	}
 
 }
