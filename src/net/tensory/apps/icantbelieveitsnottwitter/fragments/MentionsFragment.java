@@ -11,6 +11,7 @@ import net.tensory.apps.icantbelieveitsnottwitter.models.Tweet;
 import org.json.JSONArray;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -23,8 +24,7 @@ public class MentionsFragment extends TweetsListFragment {
 				.getSupportFragmentManager().findFragmentById(R.id.frameLayout);
 		
 		super.onCreate(savedInstanceState);
-		
-		
+
 		TwitterClientApp.getRestClient().getMentions(new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
